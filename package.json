@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon server/server.js",
     "webpack": "./node_modules/.bin/webpack -w",
-    "test": "export NODE_ENV=test && mocha -w test/"
+    "test": "set NODE_ENV=test && mocha -w test/", 
+    "build": "webpack --config webpack.config.js" 
   },
   "repository": {
     "type": "git",
@@ -49,6 +50,7 @@
     "react-dom": "^15.2.1",
     "sass-loader": "^6.0.6",
     "selenium": "^2.20.0",
+    "selenium-webdriver": "^3.4.0",
     "sinon": "^2.3.7",
     "supertest": "^3.0.0",
     "ts-loader": "^2.2.2",
