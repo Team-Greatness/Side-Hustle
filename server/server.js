@@ -8,8 +8,9 @@ const path = require('path');
 const formController = require('./../controller/formController');
 
 const PORT = 3000;
+const mongoURI = process.env.NODE_ENV === 'test' ? 'mongodb://localhost/sidehustletesting' :  'mongodb://sidehustle:codesmith15@ds151752.mlab.com:51752/sidehustle';
+mongoose.connect(mongoURI);
 
-mongoose.connect('mongodb://sidehustle:codesmith15@ds151752.mlab.com:51752/sidehustle');
 mongoose.connection.once('open', () => {
   console.log('Connected to Database');
 });
@@ -32,4 +33,7 @@ app.post('/post', formController.createForm);
 //   res.sendFile(path.join(__dirname + './../static/post.html'));
 // }));
 
-app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+//app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+
+const server = app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+module.exports = {server, mongoose};

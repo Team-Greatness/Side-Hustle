@@ -3,3 +3,5 @@
 require('babel-register')({
   presets: ['es2015', 'react'],
 });
+// require ('./unit')
+require('./backendtests');
