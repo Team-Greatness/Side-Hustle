@@ -20,18 +20,17 @@ app.use('/static', express.static(__dirname +'./../static'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
-app.get(/.*/, (req, res) => {
-  const domain = req.get('host').replace(/\:.*/, '');
-  // res.end(renderFullPage('', port, domain));
-  res.sendFile(path.join(__dirname + './../static/post.html'));
-});
-
 app.get('/api', formController.pullData);
 
 app.post('/post', formController.createForm);
 // , ((req, res, next) => {
 //   res.sendFile(path.join(__dirname + './../static/post.html'));
 // }));
+
+app.get(/.*/, (req, res) => {
+  const domain = req.get('host').replace(/\:.*/, '');
+  // res.end(renderFullPage('', port, domain));
+  res.sendFile(path.join(__dirname + './../static/post.html'));
+});
 
 app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
