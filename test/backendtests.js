@@ -9,10 +9,14 @@ const assert = require('chai').assert;
 console.log('DB TO USE: ' ,process.env.NODE_ENV);
 
 
-// before(function(){
-//   //starts up the server.
-//   server = require('../server/server');
-// });
+before(function(){
+  //wipes the test DB.
+  server.mongoose.connection.once('open', () => {
+      server.mongoose.connection.db.dropCollection('forms', (err, result) => {
+        if (err) console.log(err);
+      });
+  });
+});
 
 // after(function(done){
 //   //doesn't work
@@ -80,14 +84,14 @@ describe('Route functionality', () => {
 
 describe('Database calls', ()=> {
   describe('GET', ()=> {
-    it('should respond with status code 200 and a JSON array', done => {
+    it('should respond with status code 200 and an empty JSON array', done => {
       request(HOST)
         .get('/api')
         .expect('Content-Type', /application\/json/)
         .expect(200)
         .expect((res)=> {
           expect(res.body).to.be.an('array')
-          // expect(res.body.length).to.be.at.least(0)
+          expect(res.body.length).to.equal(0)
         }).end(done);
     });
   });
@@ -101,8 +105,7 @@ describe('Database calls', ()=> {
           .expect(418)
           .expect((res)=> {
             expect(res.body).to.be.an('object')
-            console.log('BAD', res.body)
-            expect(Object.keys(res.body).length).to.equal(0)
+            expect(Object.keys(res.body).length).to.equal(1)
           }).end(done);
     });
 
@@ -124,9 +127,89 @@ describe('Database calls', ()=> {
           }).end(done);
     });
   });
+
+  describe('GET', ()=> {
+    it('should respond with status code 200 and a JSON array containing a job object', done => {
+      request(HOST)
+        .get('/api')
+        .expect('Content-Type', /application\/json/)
+        .expect(200)
+        .expect((res)=> {
+          expect(res.body).to.be.an('array')
+          expect(res.body.length).to.equal(1)
+          expect(res.body[0]).to.be.an('object')
+          expect(res.body[0].title).to.equal('supertest')
+        }).end(done);
+    });
+  });
 });
 
   describe('TDD - CRUD', () => {
+    describe('updating items in the database', () => {
+      it('should allow a user to update the price, description or address of job and return a status 200 and the updated job', done =>{
+        request(HOST)
+        .put('/updatejob')
+        .set('Content-Type', 'application/json')
+        .send({
+          title: 'supertest',
+          description: 'an updated test job',
+          address: 'hack reactor',
+          pay: 17855
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).to.be.an('object')
+          expect(res.body.title).to.equal('supertest')
+          expect(res.body.address).to.equal('hack reactor')
+          expect(Object.keys(res.body).length).to.equal(4)
+        }).end(done);
+      });
+    });
+
+    describe('claiming a job', () => {
+      it('should allow a user to claim a job, update the document to note his username, and return status 200 and the updated document', done =>{
+        request(HOST)
+        .put('/updatejob')
+        .set('Content-Type', 'application/json')
+        .send({
+          title: 'supertest',
+          description: 'an updated test job',
+          address: 'hack reactor',
+          pay: 17855,
+          claimant: 'testUser'
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).to.be.an('object')
+          expect(res.body.title).to.equal('supertest')
+          expect(res.body.claimant).to.equal('testUser')
+          expect(Object.keys(res.body).length).to.equal(5)
+        }).end(done);
+      });
+    });
+
+    describe('blocking a job claim', () => {
+      it('should allow a user to block a claim to a job, update the DB to reflect that and return status code 200 as well as the updated job', done =>{
+        request(HOST)
+        .put('/updatejob')
+        .set('Content-Type', 'application/json')
+        .send({
+          title: 'supertest',
+          description: 'an updated test job',
+          address: 'hack reactor',
+          pay: 17855,
+          claimant: 'none'
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).to.be.an('object')
+          expect(res.body.title).to.equal('supertest')
+          expect(res.body.claimant).to.equal('none')
+          expect(Object.keys(res.body).length).to.equal(5)
+        }).end(done);
+      });
+    });
+
     describe('deleting items from the database', () => {
       it('should allow a user to delete his job from the database, and return status 200 and the deleted job.', done => {
         request(HOST)
@@ -142,11 +225,11 @@ describe('Database calls', ()=> {
         .expect((res) => {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
-          expect(Object.keys(res.body).length).to.equal(7)
+          expect(Object.keys(res.body).length).to.equal(4)
         }).end(done);
       });
 
-      it('should return a status 418 and the job in question if the delete throws an error', done => {
+      xit('should return a status 418 and the job in question if the delete throws an error', done => {
         request(HOST)
         .del('/deletejob')
         .set('Content-Type', 'application/json')
@@ -164,70 +247,7 @@ describe('Database calls', ()=> {
       });
     });
 
-    describe('updating items in the database', () => {
-      it('should allow a user to update the price, description or address of job and return a status 200 and the updated job', done =>{
-        request(HOST)
-        .put('/updatejob')
-        .set('Content-Type', 'application/json')
-        .send({
-          title: 'supertest',
-          description: 'an updated test job',
-          address: 'hack reactor',
-          pay: 17855
-        })
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).to.be.an('object')
-          expect(res.body.title).to.equal('supertest')
-          xpect(res.body.address).to.equal('hack reactor')
-          expect(Object.keys(res.body).length).to.equal(7)
-        }).end(done);
-      });
-    });
 
-    describe('claiming a job', () => {
-      it('should allow a user to claim a job, update the document to note his username, and return status 200 and the updated document', done =>{
-        request(HOST)
-        .put('/claimjob')
-        .set('Content-Type', 'application/json')
-        .send({
-          title: 'supertest',
-          description: 'an updated test job',
-          address: 'hack reactor',
-          pay: 17855,
-          claimant: 'testUser'
-        })
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).to.be.an('object')
-          expect(res.body.title).to.equal('supertest')
-          xpect(res.body.claimant).to.equal('testUser')
-          expect(Object.keys(res.body).length).to.equal(7)
-        }).end(done);
-      });
-    });
-
-    describe('blocking a job claim', () => {
-      it('should allow a user to block a claim to a job, update the DB to reflect that and return status code 200 as well as the updated job', done =>{
-        request(HOST)
-        .put('/blockclaim')
-        .set('Content-Type', 'application/json')
-        .send({
-          title: 'supertest',
-          description: 'an updated test job',
-          address: 'hack reactor',
-          pay: 17855,
-          claimant: ''
-        })
-        .expect(200)
-        .expect((res) => {
-          expect(res.body).to.be.an('object')
-          expect(res.body.title).to.equal('supertest')
-          xpect(res.body.claimant).to.equal('')
-          expect(Object.keys(res.body).length).to.equal(7)
-        }).end(done);
-      });
-    });
 
     // describe('signing up as a new user', ()=>{
     //   it('should add a user to the database when it recieves a token from gitHub, and respond with status 200 and the username and userID (SSID) on a cookie', done =>{
