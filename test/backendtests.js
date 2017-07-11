@@ -115,6 +115,7 @@ describe('Database calls', ()=> {
           .set('Content-Type', 'application/json')
           .send({
             title: 'supertest',
+            userID: 'testIDabcdefg',
             description: 'a test job',
             address: 'codesmith',
             pay: 17200
@@ -123,7 +124,7 @@ describe('Database calls', ()=> {
           .expect((res) => {
             expect(res.body).to.be.an('object')
             expect(res.body.title).to.equal('supertest')
-            expect(Object.keys(res.body).length).to.equal(7)
+            expect(Object.keys(res.body).length).to.equal(8)
           }).end(done);
     });
   });
@@ -152,6 +153,7 @@ describe('Database calls', ()=> {
         .set('Content-Type', 'application/json')
         .send({
           title: 'supertest',
+          userID: 'testIDabcdefg',
           description: 'an updated test job',
           address: 'hack reactor',
           pay: 17855
@@ -161,7 +163,7 @@ describe('Database calls', ()=> {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
           expect(res.body.address).to.equal('hack reactor')
-          expect(Object.keys(res.body).length).to.equal(4)
+          expect(Object.keys(res.body).length).to.equal(5)
         }).end(done);
       });
     });
@@ -173,6 +175,7 @@ describe('Database calls', ()=> {
         .set('Content-Type', 'application/json')
         .send({
           title: 'supertest',
+          userID: 'testIDabcdefg',
           description: 'an updated test job',
           address: 'hack reactor',
           pay: 17855,
@@ -183,7 +186,7 @@ describe('Database calls', ()=> {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
           expect(res.body.claimant).to.equal('testUser')
-          expect(Object.keys(res.body).length).to.equal(5)
+          expect(Object.keys(res.body).length).to.equal(6)
         }).end(done);
       });
     });
@@ -195,6 +198,7 @@ describe('Database calls', ()=> {
         .set('Content-Type', 'application/json')
         .send({
           title: 'supertest',
+          userID: 'testIDabcdefg',
           description: 'an updated test job',
           address: 'hack reactor',
           pay: 17855,
@@ -205,7 +209,7 @@ describe('Database calls', ()=> {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
           expect(res.body.claimant).to.equal('none')
-          expect(Object.keys(res.body).length).to.equal(5)
+          expect(Object.keys(res.body).length).to.equal(6)
         }).end(done);
       });
     });
@@ -217,6 +221,7 @@ describe('Database calls', ()=> {
         .set('Content-Type', 'application/json')
         .send({
           title: 'supertest',
+          userID: 'testIDabcdefg',
           description: 'a test job',
           address: 'codesmith',
           pay: 17200
@@ -225,7 +230,7 @@ describe('Database calls', ()=> {
         .expect((res) => {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
-          expect(Object.keys(res.body).length).to.equal(4)
+          expect(Object.keys(res.body).length).to.equal(5)
         }).end(done);
       });
 
@@ -235,6 +240,7 @@ describe('Database calls', ()=> {
         .set('Content-Type', 'application/json')
         .send({
           title: 'supertest',
+          userID: 'testIDabcdefg',
           description: 'a test job',
           pay: '17200'
         })

@@ -3,9 +3,12 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const formController = require('./../controller/formController');
+//const userController = require('./../controller/userController');
+
 
 const PORT = 3000;
 const mongoURI = process.env.NODE_ENV === 'test' ? 'mongodb://localhost/sidehustletesting' :  'mongodb://sidehustle:codesmith15@ds151752.mlab.com:51752/sidehustle';
@@ -18,6 +21,7 @@ mongoose.connection.once('open', () => {
 app.use('/build', express.static(__dirname +'./../build'));
 app.use('/static', express.static(__dirname +'./../static'));
 
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
