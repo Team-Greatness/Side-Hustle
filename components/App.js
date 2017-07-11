@@ -16,22 +16,8 @@ class App extends Component {
         this.addFloatFromRoot = this.addFloatFromRoot.bind(this);
     }
 
-    retrieveDataFromServer() {
-        $.get('http://localhost:3000/api', (data) => {
-          this.parseDataFromServer(data);
-        });
-    }
-
-    parseDataFromServer(data) {
-      let validLocations = mapController.getDistance(data);
-       validLocations.then(jobdata => {
-         mapController.filteredData = jobdata;
-         this.setState({'jobs': jobdata})
-       });
-    }
     // Creates a job component for each job request in the database
     componentDidMount() {
-        this.retrieveDataFromServer();
         console.log('passed');
     }
 
@@ -46,12 +32,6 @@ class App extends Component {
     }
 
     render() {
-        // ViewJob Component with relevant props passed down 
-        const viewJob = (props) => {
-            return (
-                <ViewJob jobs={this.state.jobs} />
-            );
-        }
        const rootStruct = (props) => {
             return (
               <div>
@@ -81,7 +61,7 @@ class App extends Component {
             <Switch>
               <Route exact={true} path='/' component={rootStruct} />
               <Route path="/PostJob" component={form} />
-              <Route path="/ViewJob" component={viewJob} />
+              <Route path="/ViewJob" component={ViewJob} />
             </Switch>
           </Router>
         )
