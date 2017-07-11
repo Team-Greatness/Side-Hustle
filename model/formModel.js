@@ -6,7 +6,8 @@ const formSchema = new Schema({
   title: {type: String, required: true},
   description : {type: String, required: true},
   address: {type: String, required: true},
-  pay : {type: Number, required: true}
+  pay : {type: Number, required: true},
+  claimant: {type: String, required: true, default: 'none'}
 });
 
 module.exports = mongoose.model('Form', formSchema);

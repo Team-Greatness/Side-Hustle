@@ -29,6 +29,35 @@ app.get('/', (req, res) => {
 app.get('/api', formController.pullData);
 
 app.post('/post', formController.createForm);
+
+
+// TDD PORTION - write DB functions tomorrow.
+
+app.delete('/deletejob', /*formController.deleteJob,*/ (req, res) => {
+  res.body = req.body; //should change
+  res.status(300); // should change
+  res.end();
+});
+// it may make sense to roll these three items into one route, experiment and research this possibility. 
+app.put('/updatejob', /*formController.updatejob*/ (req, res) => {
+  res.body = req.body;
+  res.status(424);
+  res.end();
+});
+
+
+app.put('/claimjob', /*formController.updatejob*/, (req, res) => {
+  res.body = req.body;
+  res.status(424);
+  res.end();
+});
+
+
+app.put('/blockclaim', /*formController.updatejob*/, (req, res) => {
+  res.body = req.body;
+  res.status(424);
+  res.end();
+});
 // , ((req, res, next) => {
 //   res.sendFile(path.join(__dirname + './../static/post.html'));
 // }));

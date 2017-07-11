@@ -1,4 +1,4 @@
-let server;
+const server = require('../server/server')
 const request = require('supertest');
 const PORT = 3000;
 const HOST = 'http://localhost:3000';
@@ -9,17 +9,17 @@ const assert = require('chai').assert;
 console.log('DB TO USE: ' ,process.env.NODE_ENV);
 
 
-before(function(){
-  //starts up the server.
-  server = require('../server/server');
-});
+// before(function(){
+//   //starts up the server.
+//   server = require('../server/server');
+// });
 
-after(function(done){
-  //doesn't work
-  server.mongoose.disconnect();
-  server.server.close(done);
-  done();
-});
+// after(function(done){
+//   //doesn't work
+//   server.mongoose.disconnect();
+//   server.server.close(done);
+//   done();
+// });
 
 
 describe('Route functionality', () => {
@@ -120,11 +120,11 @@ describe('Database calls', ()=> {
           .expect((res) => {
             expect(res.body).to.be.an('object')
             expect(res.body.title).to.equal('supertest')
-            expect(Object.keys(res.body).length).to.equal(6)
+            expect(Object.keys(res.body).length).to.equal(7)
           }).end(done);
     });
   });
-
+});
 
   describe('TDD - CRUD', () => {
     describe('deleting items from the database', () => {
@@ -142,7 +142,7 @@ describe('Database calls', ()=> {
         .expect((res) => {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
-          expect(Object.keys(res.body).length).to.equal(6)
+          expect(Object.keys(res.body).length).to.equal(7)
         }).end(done);
       });
 
@@ -159,12 +159,12 @@ describe('Database calls', ()=> {
         .expect((res) => {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
-          expect(Object.keys(res.body).length).to.equal(4)
+          expect(Object.keys(res.body).length).to.equal(5)
         }).end(done);
       });
     });
 
-    describe('updating items in the database', => {
+    describe('updating items in the database', () => {
       it('should allow a user to update the price, description or address of job and return a status 200 and the updated job', done =>{
         request(HOST)
         .put('/updatejob')
@@ -180,7 +180,51 @@ describe('Database calls', ()=> {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
           xpect(res.body.address).to.equal('hack reactor')
-          expect(Object.keys(res.body).length).to.equal(4)
+          expect(Object.keys(res.body).length).to.equal(7)
+        }).end(done);
+      });
+    });
+
+    describe('claiming a job', () => {
+      it('should allow a user to claim a job, update the document to note his username, and return status 200 and the updated document', done =>{
+        request(HOST)
+        .put('/claimjob')
+        .set('Content-Type', 'application/json')
+        .send({
+          title: 'supertest',
+          description: 'an updated test job',
+          address: 'hack reactor',
+          pay: 17855,
+          claimant: 'testUser'
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).to.be.an('object')
+          expect(res.body.title).to.equal('supertest')
+          xpect(res.body.claimant).to.equal('testUser')
+          expect(Object.keys(res.body).length).to.equal(7)
+        }).end(done);
+      });
+    });
+
+    describe('blocking a job claim', () => {
+      it('should allow a user to block a claim to a job, update the DB to reflect that and return status code 200 as well as the updated job', done =>{
+        request(HOST)
+        .put('/blockclaim')
+        .set('Content-Type', 'application/json')
+        .send({
+          title: 'supertest',
+          description: 'an updated test job',
+          address: 'hack reactor',
+          pay: 17855,
+          claimant: ''
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).to.be.an('object')
+          expect(res.body.title).to.equal('supertest')
+          xpect(res.body.claimant).to.equal('')
+          expect(Object.keys(res.body).length).to.equal(7)
         }).end(done);
       });
     });
@@ -193,7 +237,7 @@ describe('Database calls', ()=> {
     // })
   });
 
-});
+
 
 // to add :
 
@@ -205,7 +249,7 @@ DONE route test to destroy an item
  PENDING route test to sign in
  DONE route test to update an item
 PENDING UNTIL USEFULNESS IS WORKED OUT route test to return specific items
-route test to claim a job
-route test to block a claim
+DONE route test to claim a job
+DONE route test to block a claim
 
 */
