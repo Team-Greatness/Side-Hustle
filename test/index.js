@@ -3,3 +3,8 @@
 require('babel-register')({
   presets: ['es2015', 'react'],
 });
+
+// require('./components/viewJob-enzyme');
+require('./components/viewJob-feature');
+require('./components/postJob-feature');
+require('./components/homePage-feature');
