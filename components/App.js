@@ -3,7 +3,8 @@ import { render } from 'react-dom';
 import ViewJob from './viewJob.js';
 import Job from './Job.js';
 import FormOfInformation from './Form.js';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { IndexRoute } from 'react-router';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import $ from 'jquery';
 import mapController from './../controller/mapController'
 
@@ -51,6 +52,17 @@ class App extends Component {
                 <ViewJob jobs={this.state.jobs} />
             );
         }
+       const rootStruct = (props) => {
+            return (
+              <div>
+                <ul>
+                  <button onClick={this.removeFloatFromRoot}><Link to="/PostJob">PostJob</Link></button>
+                  <button onClick={this.addFloatFromRoot}><Link to="/ViewJob">ViewJob</Link></button>
+                  {/*<button onClick={this.retrieveDataFromServer}></button>*/}
+                </ul>
+              </div>
+            );
+        }
         const styles = {
             float: 'none',
             'text-align': 'center',
@@ -63,20 +75,15 @@ class App extends Component {
         }
         
         return (
-            // React Router is used to render components based on the route specified
-            <Router>
-                <div>
-                    <ul>
-                        <button onClick={this.removeFloatFromRoot}><Link to="/PostJob">PostJob</Link></button>
-                        <button onClick={this.addFloatFromRoot}><Link to="/ViewJob">ViewJob</Link></button>
-                        {/*<button onClick={this.retrieveDataFromServer}></button>*/}
-                    </ul>
-                <div id='postjob'>
-                   <Route path="/PostJob" component={form} />
-                </div>
-                   <Route path="/ViewJob" component={viewJob} />
-                </div>
-            </Router>
+          // React Router is used to render components based on the route specified
+          // 
+          <Router>
+            <Switch>
+              <Route exact={true} path='/' component={rootStruct} />
+              <Route path="/PostJob" component={form} />
+              <Route path="/ViewJob" component={viewJob} />
+            </Switch>
+          </Router>
         )
     }
 }

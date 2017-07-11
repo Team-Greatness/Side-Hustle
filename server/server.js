@@ -21,7 +21,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-app.get('/', (req, res) => {
+app.get(/.*/, (req, res) => {
+  const domain = req.get('host').replace(/\:.*/, '');
+  // res.end(renderFullPage('', port, domain));
   res.sendFile(path.join(__dirname + './../static/post.html'));
 });
 
