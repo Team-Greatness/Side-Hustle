@@ -36,8 +36,8 @@ class App extends Component {
             return (
               <div>
                 <ul>
-                  <button onClick={this.removeFloatFromRoot}><Link to="/PostJob">PostJob</Link></button>
-                  <button onClick={this.addFloatFromRoot}><Link to="/ViewJob">ViewJob</Link></button>
+                  <Link to="/PostJob"><button>PostJob</button></Link>
+                  <Link to="/ViewJob"><button>ViewJob</button></Link>
                   {/*<button onClick={this.retrieveDataFromServer}></button>*/}
                 </ul>
               </div>
