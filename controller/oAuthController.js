@@ -49,7 +49,7 @@ const oAuthController = {
 
 buildCodeQS = function() {
   const qObj = {
-    client_id: '83ab5b077c1041ed2fed',
+    client_id: '',
     redirect_url: 'http://localhost:3000/oauthcallback',
     scope: 'user',
   }
@@ -58,8 +58,8 @@ buildCodeQS = function() {
 
 buildTokenQS = function (aCode) {
   const qObj = {
-    client_id:  '83ab5b077c1041ed2fed',
-    client_secret: '2384b41a2404b26375d05f995dc19f4c406890b5',
+    client_id:  '',
+    client_secret: '',
     code: aCode,
   }
   return qs.stringify(qObj);
