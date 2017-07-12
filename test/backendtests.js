@@ -27,7 +27,7 @@ before(function(){
 
 
 describe('Route functionality', () => {
-
+  //fix me to skip over oAuth.
   describe('routes to static files', () => {
     describe(' GET / - initial route', () => {
       it('responds with 200 status and text/html content type', done => {
@@ -113,9 +113,9 @@ describe('Database calls', ()=> {
         request(HOST)
           .post('/post')
           .set('Content-Type', 'application/json')
+          .set('Cookie', ['ssid=testIDabcdefg'])
           .send({
             title: 'supertest',
-            userID: 'testIDabcdefg',
             description: 'a test job',
             address: 'codesmith',
             pay: 17200
@@ -151,9 +151,9 @@ describe('Database calls', ()=> {
         request(HOST)
         .put('/updatejob')
         .set('Content-Type', 'application/json')
+        .set('Cookie', ['ssid=testIDabcdefg'])
         .send({
           title: 'supertest',
-          userID: 'testIDabcdefg',
           description: 'an updated test job',
           address: 'hack reactor',
           pay: 17855
@@ -173,9 +173,9 @@ describe('Database calls', ()=> {
         request(HOST)
         .put('/updatejob')
         .set('Content-Type', 'application/json')
+        .set('Cookie', ['ssid=testIDabcdefg'])
         .send({
           title: 'supertest',
-          userID: 'testIDabcdefg',
           description: 'an updated test job',
           address: 'hack reactor',
           pay: 17855,
@@ -196,6 +196,7 @@ describe('Database calls', ()=> {
         request(HOST)
         .put('/updatejob')
         .set('Content-Type', 'application/json')
+        .set('Cookie', ['ssid=testIDabcdefg'])
         .send({
           title: 'supertest',
           userID: 'testIDabcdefg',
@@ -219,9 +220,9 @@ describe('Database calls', ()=> {
         request(HOST)
         .del('/deletejob')
         .set('Content-Type', 'application/json')
+        .set('Cookie', ['ssid=testIDabcdefg'])
         .send({
           title: 'supertest',
-          userID: 'testIDabcdefg',
           description: 'a test job',
           address: 'codesmith',
           pay: 17200
@@ -238,9 +239,9 @@ describe('Database calls', ()=> {
         request(HOST)
         .del('/deletejob')
         .set('Content-Type', 'application/json')
+        .set('Cookie', ['ssid=testIDabcdefg'])
         .send({
           title: 'supertest',
-          userID: 'testIDabcdefg',
           description: 'a test job',
           pay: '17200'
         })
@@ -256,7 +257,7 @@ describe('Database calls', ()=> {
 
 
     // describe('signing up as a new user', ()=>{
-    //   it('should add a user to the database when it recieves a token from gitHub, and respond with status 200 and the username and userID (SSID) on a cookie', done =>{
+    //   it('should add a user to the database when it recieves a token from gitHub, and respond with status 200 and the username and userID (ssid) on a cookie', done =>{
     //     request(HOST)
     //
     //   })
