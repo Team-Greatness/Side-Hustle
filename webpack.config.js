@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: './index.js',
+  devtool: 'source-map',
   output: {
     path: path.resolve('build'),
     filename: 'bundle.js', 
@@ -14,7 +15,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
   	    query: {
-          presets: ['es2015', 'react']
+          presets: ['es2015', 'react'],
         }
       }
       ,

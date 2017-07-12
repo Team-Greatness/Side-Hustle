@@ -15,24 +15,20 @@ const mapController = {
     google.maps.event.trigger(mapController.map, 'resize');
     mapController.map.setCenter(mapController.pos);
     mapController.placeMarkers(mapController.filteredData);
-  }, 
-
-  hideMap() {
-    document.getElementById("map").style.display = "none";
   },
 
   setLocation(ad) {
     const input = document.getElementById("locationInput").value; 
     console.log('input is', input);
     const promise = new Promise((resolve, reject) => {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode( {'address': input}, function(results, status) {
-      if (status == 'OK') {
-        resolve({lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()});
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode( {'address': input}, function(results, status) {
+        if (status == 'OK') {
+          resolve({lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()});
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
     });
     return promise; 
 
@@ -51,7 +47,7 @@ const mapController = {
         '<p>' + 'Pay: ' + marker.pay + '</p>'  +
         '<p>' + marker.address + '</p>' + 
         '<p>' + marker.description + '</p>' + '</div>');
-      mapController.infoWindow.open(map, marker);
+      mapController.infoWindow.open(this.map, marker);
       mapController.infoWindow.addListener('closeclick', function() {
         mapController.infoWindow.marker = null;
       });
@@ -61,7 +57,7 @@ const mapController = {
 
   placeMarkers(data) {
     mapController.markers.forEach(marker => {
-      marker.setMap(null);
+      // marker.setMap(null);
     });
     mapController.markers = [];
     data.forEach((loc, index) => {
@@ -79,22 +75,25 @@ const mapController = {
           pay: loc.pay,
           description: loc.description,
           animation: google.maps.Animation.DROP,
-          id: index
+          id: index,
+          map: mapController.map
         });
         mapController.markers.push(marker);
         marker.addListener('click', function() {
-          let self = this; 
+          let self = this;
           mapController.populateInfoWindow(self);
         });
-        marker.setMap(mapController.map);
+      
       });
     }); 
   },
 
   getDistance(data) {
+    console.log('getting distance');
     mapController.data = data; 
     let addresses = data.map(item => item.address);
     const service = new google.maps.DistanceMatrixService();
+    console.log(data);
     let promise = new Promise(function(resolve, reject) {
       service.getDistanceMatrix(
       {
@@ -102,19 +101,20 @@ const mapController = {
         destinations: [mapController.pos],
         travelMode: 'DRIVING',
         unitSystem: google.maps.UnitSystem.IMPERIAL,
-        avoidHighways: false,
+        avoidHighways: false, 
         avoidTolls: false,
       }, resolveDistance);
   
-    function resolveDistance(response, status) {
-      let result = [];
-      var addresses = response.rows[0].elements;
-      response.rows.forEach((item, index) => {
-        if (parseInt(item.elements[0].distance.text) < 15) result.push(data[index]); 
-      });
-      resolve(result);
+      function resolveDistance(response, status) {
+        let result = [];
+        console.log(response);
+        var addresses = response.rows[0].elements;
+        response.rows.forEach((item, index) => {
+          if (parseInt(item.elements[0].distance.text) < 15) result.push(data[index]); 
+        });
+        resolve(result);
       }
-    })
+    });
     return promise; 
   },
   
@@ -150,25 +150,21 @@ const mapController = {
     const promise = new Promise((resolve, reject) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
+      } else {
+          console.log("Geolocation is not supported by this browser.");
+      }
   
-    function showPosition(position) {
-      mapController.pos = {lat: position.coords.latitude, lng: position.coords.longitude};
-      mapController.map.setCenter(mapController.pos);
-      resolve(mapController.pos);
-    }
+      function showPosition(position) {
+        mapController.pos = {lat: position.coords.latitude, lng: position.coords.longitude};
+        mapController.map.setCenter(mapController.pos);
+        resolve(mapController.pos);
+      }
     }); 
     return promise; 
   },
   
-  setMap(loc) {
-    mapController.map = new google.maps.Map(document.getElementById('map'), {
-      center: loc,
-      zoom: 11,
-      mapTypeControl: true 
-    });
+  setMap(map) {
+    mapController.map = map;
     mapController.infoWindow = new google.maps.InfoWindow();
     mapController.getLocation();
   },
