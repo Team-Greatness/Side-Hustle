@@ -3,13 +3,12 @@ import { render } from 'react-dom'
 import Job from './Job.js'
 import mapController from '../controller/mapController.js';
 import $ from 'jquery';
-import GoogleMap from 'google-map-react';
 
 var INITIAL_LOCATION = {
   address: 'London, United Kingdom',
   position: {
-    latitude: 51.5085300,
-    longitude: -0.1257400
+    latitude: 33.979089,
+    longitude: -118.422812
   }
 };
 
@@ -24,16 +23,15 @@ class ViewJob extends React.Component {
 
     constructor(props) {
         super(props)
-        this.mapElement = {};
 
       //bind the this prop of the ref to this component
         this.setMapElementReference = this.setMapElementReference.bind(this);
         
         this.state = {
           isGeocodingError: false,
-          foundAddress: INITIAL_LOCATION.address
+          foundAddress: INITIAL_LOCATION.address,
+          jobs: []
         }
-        this.retrieveDataFromServer();
         this.parseDataFromServer = this.parseDataFromServer.bind(this);
         this.setLocation = this.setLocation.bind(this);
         this.getLocation = this.getLocation.bind(this);
@@ -42,16 +40,6 @@ class ViewJob extends React.Component {
 
     componentDidMount() {
       var mapElement = this.mapElement;
-      
-      console.log(mapElement);
-
-      this.map = new google.maps.Map(mapElement, {
-        zoom: INITIAL_MAP_ZOOM_LEVEL,
-        center: {
-          lat: INITIAL_LOCATION.position.latitude,
-          lng: INITIAL_LOCATION.position.longitude
-        }
-      });
 
       this.marker = new google.maps.Marker({
         map: this.map,
@@ -100,42 +88,71 @@ class ViewJob extends React.Component {
         mapController.placeMarkers(jobdata);
         //////////////////
 
-        // this.setState({'jobs': jobdata})
+        this.setState({'jobs': jobdata})
       });
     }
 
     setMapElementReference(mapElementReference) {
       console.log(this);
       this.mapElement = mapElementReference;
+      this.getServerData();
     }
 
+    getServerData() {
+      this.retrieveDataFromServer();
+      this.setInitials();
+    }
+
+    setInitials() {
+      this.map = new google.maps.Map(this.mapElement, {
+        zoom: INITIAL_MAP_ZOOM_LEVEL,
+        center: {
+          lat: INITIAL_LOCATION.position.latitude,
+          lng: INITIAL_LOCATION.position.longitude
+        }
+      });
+      mapController.setMap(this.map);
+    }
 
     render() {
-      // let jobs = this.data.map((dataPoint, index) => {
-      //   return <Job title={dataPoint.title} index={index} description={dataPoint.description} pay={dataPoint.pay} location={dataPoint.address} onClick={() => console.log(index)}/>
-      // });
+      let jobs = this.state.jobs.map((dataPoint, index) => {
+        return <Job title={dataPoint.title} index={index} description={dataPoint.description} pay={dataPoint.pay} location={dataPoint.address} onClick={() => console.log(index)}/>
+      });
       // executes mapController.showMap before this.props.jobs
       // mapController.showMap();
 
+      console.log('jobs',jobs);
+
       const styles = {
-        bottom: '0px',
-        height: '100%',
-        left: '0px',
-        position: 'absolute',
-        right: '500px',
+        map: {
+          bottom: '0px',
+          height: '100%',
+          left: '0px',
+          position: 'absolute',
+          right: '500px',
+        },
+        right: {
+          float: 'right'
+        },
+        jobList: {
+          clear: 'both',
+          paddingTop: 39
+        }
       }
 
       return (
         <div>
-          <div style = {styles} className="map" ref={this.setMapElementReference}></div>
-          <div id='location'>
-          <h4 id="setLocation">Set Location</h4>
-            <input id="locationInput" type="text"/>
-            <button id="locationButton" onClick={this.setLocation}>Set Location</button>
-            <button id="currentLocationButton" onClick={this.getLocation}>Use Current Location</button>
-          </div>
-          <div id='viewjobs'>
-              {/*jobs*/}
+          <div style = {styles.map} className="map" ref={this.setMapElementReference}></div>
+          <div style = {styles.right}>
+            <div id='location'>
+            <h4 id="setLocation">Set Location</h4>
+              <input id="locationInput" type="text"/>
+              <button id="locationButton" onClick={this.setLocation}>Set Location</button>
+              <button id="currentLocationButton" onClick={this.getLocation}>Use Current Location</button>
+            </div>
+            <div id='viewjobs' style={styles.jobList}>
+                {jobs}
+            </div>
           </div>
         </div>
       )
