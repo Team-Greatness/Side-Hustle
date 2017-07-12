@@ -6,7 +6,7 @@ const oAuthController = {
 
   getCode (req, res, next) {
     const url ='https://github.com/login/oauth/authorize?' +
-    this.buildCodeQS();
+    buildCodeQS();
 
     res.redirect(url);
   },
@@ -14,7 +14,7 @@ const oAuthController = {
   getToken (req, res, next) {
     const code = req.query.code;
 
-    const tokenQuery = this.buildTokenQS(code);
+    const tokenQuery = buildTokenQS(code);
     const url =  'https://github.com/login/oauth/access_token?';
 
     request.post(url + tokenQuery, (err, response, body) => {
@@ -47,19 +47,19 @@ const oAuthController = {
   }
 }
 
-oAuthController.buildCodeQS = function() {
+buildCodeQS = function() {
   const qObj = {
-    client_id: 'CLIENT ID HERE',
+    client_id: '83ab5b077c1041ed2fed',
     redirect_url: 'http://localhost:3000/oauthcallback',
     scope: 'user',
   }
   return qs.stringify(qObj);
 }
 
-oAuthController.buildTokenQS = function (aCode) {
+buildTokenQS = function (aCode) {
   const qObj = {
-    client_id:  'client ID',
-    client_secret: 'client SECRET',
+    client_id:  '83ab5b077c1041ed2fed',
+    client_secret: '2384b41a2404b26375d05f995dc19f4c406890b5',
     code: aCode,
   }
   return qs.stringify(qObj);
