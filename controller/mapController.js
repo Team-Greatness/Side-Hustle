@@ -15,10 +15,6 @@ const mapController = {
     google.maps.event.trigger(mapController.map, 'resize');
     mapController.map.setCenter(mapController.pos);
     mapController.placeMarkers(mapController.filteredData);
-  }, 
-
-  hideMap() {
-    document.getElementById("map").style.display = "none";
   },
 
   setLocation(ad) {

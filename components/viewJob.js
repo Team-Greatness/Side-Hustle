@@ -5,20 +5,15 @@ import mapController from '../controller/mapController.js';
 import $ from 'jquery';
 import Header from './Header.js'
 
-var INITIAL_LOCATION = {
-  address: 'London, United Kingdom',
+const INITIAL_LOCATION = {
+  address: 'Los Angeles, CA USA',
   position: {
     latitude: 33.979089,
     longitude: -118.422812
   }
 };
 
-var INITIAL_MAP_ZOOM_LEVEL = 8;
-
-var ATLANTIC_OCEAN = {
-  latitude: 29.532804,
-  longitude: -55.491477
-};
+let INITIAL_MAP_ZOOM_LEVEL = 8;
 
 class ViewJob extends React.Component {
 
@@ -27,7 +22,7 @@ class ViewJob extends React.Component {
 
       //bind the this prop of the ref to this component
         this.setMapElementReference = this.setMapElementReference.bind(this);
-        
+        this.hasSetMapElRef = false;
         this.state = {
           isGeocodingError: false,
           foundAddress: INITIAL_LOCATION.address,
@@ -40,7 +35,7 @@ class ViewJob extends React.Component {
     }
 
     componentDidMount() {
-      var mapElement = this.mapElement;
+      let mapElement = this.mapElement;
 
       this.marker = new google.maps.Marker({
         map: this.map,
@@ -89,12 +84,13 @@ class ViewJob extends React.Component {
     }
 
     setMapElementReference(mapElementReference) {
-      console.log(this);
       this.mapElement = mapElementReference;
-      this.getServerData();
+      if (this.hasSetMapElRef === false) this.getServerData();
     }
 
     getServerData() {
+      this.hasSetMapElRef = true;
+      this.setState({'done': 'super'});
       this.retrieveDataFromServer();
       this.setInitials();
     }
