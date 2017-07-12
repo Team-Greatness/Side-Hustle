@@ -1,8 +1,11 @@
 // Start with a webdriver instance:
 var sw = require('selenium-webdriver');
+var browser = sw.Capabilities.phantomjs();
+var phantomjs_exe = require('phantomjs-prebuilt').path;
+browser.set("phantomjs.binary.path", phantomjs_exe);
 var driver = new sw.Builder()
-   .withCapabilities(sw.Capabilities.chrome())
-   .build()
+  .withCapabilities(browser)
+  .build();
 
 //optional timeout in ms to use with eventually (defaults to 1000)
   var timeout = 15000;
@@ -22,6 +25,11 @@ describe('Home page', () => {
   before(() => {
     driver.get('http://localhost:3000');
   }); 
+
+  after(function(done){
+    // End of test use this.
+    driver.quit().then(() => done());
+  });
 
   describe('Post Job button', () => {
     it('Should display PostJob button', () => {

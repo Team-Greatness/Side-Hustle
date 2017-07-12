@@ -5,8 +5,8 @@ let Header = (props) => {
   return (
     <div>
       <ul>
-        <Link to="/PostJob"><button>PostJob</button></Link>
-        <Link to="/ViewJob"><button>ViewJob</button></Link>
+        <Link id="postJob" to="/PostJob"><button>PostJob</button></Link>
+        <Link id="viewJob" to="/ViewJob"><button>ViewJob</button></Link>
       </ul>
     </div>
   )

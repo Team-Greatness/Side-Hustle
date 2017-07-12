@@ -35,7 +35,7 @@ class FormOfInformation extends React.Component {
       <div>
         <Header />
         <form onSubmit={this.handleSubmit} method='post'>
-          <label className="inputText">
+          <label id="titleField" className="inputText">
             Title 
             <span>  </span>
             <input className="post-fields" id="title" type="text" ref = {(input) => this.inputTitle = input }/>

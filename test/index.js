@@ -5,6 +5,6 @@ require('babel-register')({
 });
 
 // require('./components/viewJob-enzyme');
-require('./components/viewJob-feature');
+// require('./components/viewJob-feature');
 require('./components/postJob-feature');
-require('./components/homePage-feature');
+// require('./components/homePage-feature');

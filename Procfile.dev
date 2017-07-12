@@ -7,10 +7,12 @@ express-api: sh -c 'npm run start'
 
 react-webpack: sh -c 'npm run webpack'
 
-testing: sh -c 'npm run test'
+# testing: sh -c 'npm run test'
 
 # log: tail -f log/development.log
 
 # redis-server: redis-server
 
 # guard: bundle exec guard -i
+# 
+selenium-server: sh -c 'java -jar selenium-server-standalone-3.4.0.jar'

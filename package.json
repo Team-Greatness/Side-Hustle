@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server/server.js",
     "webpack": "./node_modules/.bin/webpack -w",
-    "test": "export NODE_ENV=test && mocha -w test/",
+    "test": "export NODE_ENV=test && mocha --timeout 15000 -w test/",
     "build": "webpack --config webpack.config.js"
   },
   "repository": {
@@ -16,6 +16,7 @@
   "author": "Team Side Hustle",
   "license": "ISC",
   "dependencies": {
+    "async-await": "^0.1.40",
     "body-parser": "^1.17.2",
     "browserify": "^10.2.4",
     "chai-webdriver": "^1.2.0",
@@ -32,11 +33,14 @@
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
     "path-to-regexp": "^1.7.0",
+    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.14",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
-    "selenium-webdriver": "^3.4.0"
+    "selenium-webdriver": "^3.4.0",
+    "webdriverjs": "^1.7.5"
   },
   "devDependencies": {
     "babel": "^5.8.38",
