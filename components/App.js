@@ -13,23 +13,11 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-        this.removeFloatFromRoot = this.removeFloatFromRoot.bind(this);
-        this.addFloatFromRoot = this.addFloatFromRoot.bind(this);
     }
 
     // Creates a job component for each job request in the database
     componentDidMount() {
         console.log('passed');
-    }
-
-    removeFloatFromRoot() {
-        let root = document.getElementById('root');
-        if (root.style.float = 'right') root.style.float = 'none';
-    }
-
-    addFloatFromRoot() {
-        let root = document.getElementById('root');
-        if (root.style.float = 'none') root.style.float = 'right';
     }
 
     render() {
@@ -44,20 +32,13 @@ class App extends Component {
             float: 'none',
             'text-align': 'center',
         }
-
-        const form = (props) => {
-            return (
-                <FormOfInformation style={styles} />
-            )
-        }
-        
         return (
           // React Router is used to render components based on the route specified
           // 
           <Router>
             <Switch>
               <Route exact={true} path='/' component={rootStruct} />
-              <Route path="/PostJob" component={form} />
+              <Route path="/PostJob" component={FormOfInformation} />
               <Route path="/ViewJob" component={ViewJob} />
             </Switch>
           </Router>
