@@ -25,14 +25,14 @@ const mapController = {
     const input = document.getElementById("locationInput").value; 
     console.log('input is', input);
     const promise = new Promise((resolve, reject) => {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode( {'address': input}, function(results, status) {
-      if (status == 'OK') {
-        resolve({lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()});
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode( {'address': input}, function(results, status) {
+        if (status == 'OK') {
+          resolve({lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()});
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
     });
     return promise; 
 
@@ -51,7 +51,7 @@ const mapController = {
         '<p>' + 'Pay: ' + marker.pay + '</p>'  +
         '<p>' + marker.address + '</p>' + 
         '<p>' + marker.description + '</p>' + '</div>');
-      mapController.infoWindow.open(map, marker);
+      mapController.infoWindow.open(this.map, marker);
       mapController.infoWindow.addListener('closeclick', function() {
         mapController.infoWindow.marker = null;
       });
@@ -61,7 +61,7 @@ const mapController = {
 
   placeMarkers(data) {
     mapController.markers.forEach(marker => {
-      marker.setMap(null);
+      // marker.setMap(null);
     });
     mapController.markers = [];
     data.forEach((loc, index) => {
@@ -79,14 +79,15 @@ const mapController = {
           pay: loc.pay,
           description: loc.description,
           animation: google.maps.Animation.DROP,
-          id: index
+          id: index,
+          map: mapController.map
         });
         mapController.markers.push(marker);
         marker.addListener('click', function() {
-          let self = this; 
+          let self = this;
           mapController.populateInfoWindow(self);
         });
-        marker.setMap(mapController.map);
+      
       });
     }); 
   },
@@ -166,12 +167,8 @@ const mapController = {
     return promise; 
   },
   
-  setMap(loc) {
-    mapController.map = new google.maps.Map(document.getElementById('map'), {
-      center: loc,
-      zoom: 11,
-      mapTypeControl: true 
-    });
+  setMap(map) {
+    mapController.map = map;
     mapController.infoWindow = new google.maps.InfoWindow();
     mapController.getLocation();
   },
