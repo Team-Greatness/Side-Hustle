@@ -52,6 +52,11 @@ app.delete('/deletejob', formController.deleteJob);
 
 app.put('/updatejob', formController.updateJob);
 
+app.get(/.*/, (req, res) => {
+  const domain = req.get('host').replace(/\:.*/, '');
+  // res.end(renderFullPage('', port, domain));
+  res.sendFile(path.join(__dirname + './../static/post.html'));
+});
 //app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
 
 const server = app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));

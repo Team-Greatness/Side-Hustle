@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import mapController from '../controller/mapController.js';
+import Header from './Header.js'
 
 class FormOfInformation extends React.Component {
   constructor(props) {
@@ -26,43 +27,45 @@ class FormOfInformation extends React.Component {
     .fail(function(err) {
       console.log('failed to register');
     });
-}
+  }
 
 
   render() {
-    mapController.hideMap();
     return (
-      <form onSubmit={this.handleSubmit} method='post'>
-        <label className="inputText">
-          Title 
-          <span>  </span>
-          <input className="post-fields" id="title" type="text" ref = {(input) => this.inputTitle = input }/>
-        </label>
-        <br />
-        <br />
-        <label className="inputText">
-          Description 
-          <span>  </span>
-          <input className="post-fields" id="description" type="text" ref = {(input) => this.inputDescription = input }/>
-        </label>
-        <br />
-        <br />
-        <label className="inputText">
-          Address 
-          <span>  </span>
-          <input className="post-fields" id="address" type="text" ref = {(input) => this.inputAddress = input }/>
-        </label>
-        <br />
-        <br />
-        <label className="inputText">
-          Pay
-          <span>  </span>
-          <input className="post-fields" id="pay" type="text" ref = {(input) => this.inputPay = input }/>
-        </label>
-        <br />
-        <br />
-        <input type="submit" value="Submit" />
-      </form>
+      <div>
+        <Header />
+        <form onSubmit={this.handleSubmit} method='post'>
+          <label id="titleField" className="inputText">
+            Title 
+            <span>  </span>
+            <input className="post-fields" id="title" type="text" ref = {(input) => this.inputTitle = input }/>
+          </label>
+          <br />
+          <br />
+          <label className="inputText">
+            Description 
+            <span>  </span>
+            <input className="post-fields" id="description" type="text" ref = {(input) => this.inputDescription = input }/>
+          </label>
+          <br />
+          <br />
+          <label className="inputText">
+            Address 
+            <span>  </span>
+            <input className="post-fields" id="address" type="text" ref = {(input) => this.inputAddress = input }/>
+          </label>
+          <br />
+          <br />
+          <label className="inputText">
+            Pay
+            <span>  </span>
+            <input className="post-fields" id="pay" type="text" ref = {(input) => this.inputPay = input }/>
+          </label>
+          <br />
+          <br />
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
     );
   }
 }

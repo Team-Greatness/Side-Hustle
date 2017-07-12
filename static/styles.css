@@ -1,17 +1,8 @@
-
-#map {
-        bottom:0px;
-        height: 100%;
-        left: 0px;
-        position: absolute;
-        right: 500px;
-        display: none;
-
-}
 #root {
-        float: right;
+        
 }
 #location {
+    float: right;
   text-align: center; 
 }
 
