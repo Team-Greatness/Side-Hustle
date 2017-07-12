@@ -92,9 +92,11 @@ const mapController = {
   },
 
   getDistance(data) {
+    console.log('getting distance');
     mapController.data = data; 
     let addresses = data.map(item => item.address);
     const service = new google.maps.DistanceMatrixService();
+    console.log(data);
     let promise = new Promise(function(resolve, reject) {
       service.getDistanceMatrix(
       {
@@ -102,19 +104,20 @@ const mapController = {
         destinations: [mapController.pos],
         travelMode: 'DRIVING',
         unitSystem: google.maps.UnitSystem.IMPERIAL,
-        avoidHighways: false,
+        avoidHighways: false, 
         avoidTolls: false,
       }, resolveDistance);
   
-    function resolveDistance(response, status) {
-      let result = [];
-      var addresses = response.rows[0].elements;
-      response.rows.forEach((item, index) => {
-        if (parseInt(item.elements[0].distance.text) < 15) result.push(data[index]); 
-      });
-      resolve(result);
+      function resolveDistance(response, status) {
+        let result = [];
+        console.log(response);
+        var addresses = response.rows[0].elements;
+        response.rows.forEach((item, index) => {
+          if (parseInt(item.elements[0].distance.text) < 15) result.push(data[index]); 
+        });
+        resolve(result);
       }
-    })
+    });
     return promise; 
   },
   
