@@ -154,15 +154,15 @@ const mapController = {
     const promise = new Promise((resolve, reject) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
+      } else {
+          console.log("Geolocation is not supported by this browser.");
+      }
   
-    function showPosition(position) {
-      mapController.pos = {lat: position.coords.latitude, lng: position.coords.longitude};
-      mapController.map.setCenter(mapController.pos);
-      resolve(mapController.pos);
-    }
+      function showPosition(position) {
+        mapController.pos = {lat: position.coords.latitude, lng: position.coords.longitude};
+        mapController.map.setCenter(mapController.pos);
+        resolve(mapController.pos);
+      }
     }); 
     return promise; 
   },
