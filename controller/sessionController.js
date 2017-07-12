@@ -24,7 +24,7 @@ const sessionController = {
     // takes SSID and sticks it in DB.
 
     Session.findOneAndRemove({'ssid': res.locals }, (err, session) => {
-      // remove existing session cookie if it exists, and create a new one. 
+      // remove existing session cookie if it exists, and create a new one.
       if (err) {
         console.log('err');
         next(err);
@@ -54,7 +54,5 @@ const sessionController = {
   }
 
 }
-
-
 
 module.exports = sessionController;

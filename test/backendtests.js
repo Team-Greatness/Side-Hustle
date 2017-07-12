@@ -140,7 +140,8 @@ describe('Database calls', ()=> {
             title: 'supertest',
             description: 'a test job',
             address: 'codesmith',
-            pay: 17200
+            pay: 17200,
+            claimant: 'atestID1234'
           })
           .expect(200)
           .expect((res) => {
@@ -149,17 +150,85 @@ describe('Database calls', ()=> {
             expect(Object.keys(res.body).length).to.equal(8)
           }).end(done);
     });
+
+    it('should post things to the database when they are formatted correctly, and return a status 200 as well as the item posted', done => {
+        request(HOST)
+          .post('/post')
+          .set('Content-Type', 'application/json')
+          .set('Cookie', ['ssid=59669064445780750cdd4a3a'])
+          .send({
+            title: 'supertest2',
+            description: 'a second test job',
+            address: 'codesmith',
+            pay: 17200,
+            claimant: 'atestID1234'
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).to.be.an('object')
+            expect(res.body.title).to.equal('supertest2')
+            expect(Object.keys(res.body).length).to.equal(8)
+          }).end(done);
+    });
+
+    it('should post things to the database when they are formatted correctly, and return a status 200 as well as the item posted', done => {
+        request(HOST)
+          .post('/post')
+          .set('Content-Type', 'application/json')
+          .set('Cookie', ['ssid=atestID1234'])
+          .send({
+            title: 'supertest3',
+            description: 'a third test job',
+            address: 'codesmith',
+            pay: 17200,
+            claimant: '59669064445780750cdd4a3a'
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body).to.be.an('object')
+            expect(res.body.title).to.equal('supertest3')
+            expect(Object.keys(res.body).length).to.equal(8)
+          }).end(done);
+    });
   });
 
   describe('GET', ()=> {
-    it('should respond with status code 200 and a JSON array containing a job object', done => {
+    it('should respond with status code 200 and a JSON array containing three jobs', done => {
       request(HOST)
         .get('/api')
         .expect('Content-Type', /application\/json/)
         .expect(200)
         .expect((res)=> {
           expect(res.body).to.be.an('array')
-          expect(res.body.length).to.equal(1)
+          expect(res.body.length).to.equal(3)
+          expect(res.body[0]).to.be.an('object')
+          expect(res.body[0].title).to.equal('supertest')
+        }).end(done);
+    });
+
+    it('should respond with status code 200 and a JSON array containing all of a users jobs when presented with a UID', done => {
+      request(HOST)
+        .get('/myjobs')
+        .set('Cookie', 'ssid=59669064445780750cdd4a3a')
+        .expect('Content-Type', /application\/json/)
+        .expect(200)
+        .expect((res)=> {
+          expect(res.body).to.be.an('array')
+          expect(res.body.length).to.equal(2)
+          expect(res.body[0]).to.be.an('object')
+          expect(res.body[0].title).to.equal('supertest')
+        }).end(done);
+    });
+
+    it('should respond with status code 200 and a JSON array containing all of a users claims when presented with a UID', done => {
+      request(HOST)
+        .get('/claims')
+        .set('Cookie', 'ssid=atestID1234')
+        .expect('Content-Type', /application\/json/)
+        .expect(200)
+        .expect((res)=> {
+          expect(res.body).to.be.an('array')
+          expect(res.body.length).to.equal(2)
           expect(res.body[0]).to.be.an('object')
           expect(res.body[0].title).to.equal('supertest')
         }).end(done);

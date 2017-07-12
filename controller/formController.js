@@ -25,6 +25,25 @@ const formController = {
     });
   },
 
+  myJobs(req, res, next) {
+    const uid = req.cookies.ssid;
+    Form.find({'userID': uid}, (err, jobs) => {
+      if (err){
+        console.log(err);
+        next(err);
+      }
+      res.json(jobs);
+    });
+  },
+
+  claims(req, res, next) {
+    const uid = req.cookies.ssid;
+    Form.find({'claimant': uid}, (err, claims) => {
+      if (err) next(err);
+      res.json(claims);
+    });
+  },
+
 
   deleteJob(req, res, next) {
     const job = req.body;

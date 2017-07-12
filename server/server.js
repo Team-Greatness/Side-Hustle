@@ -43,6 +43,9 @@ app.get('/app', sessionController.isLoggedIn, sessionController.handleSession, (
  //crud routes
 app.get('/api', formController.pullData);
 
+app.get('/myjobs', formController.myJobs);
+app.get('/claims', formController.claims);
+
 app.post('/post', formController.createForm);
 
 app.delete('/deletejob', formController.deleteJob);
