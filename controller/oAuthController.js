@@ -7,7 +7,7 @@ const oAuthController = {
   getCode (req, res, next) {
 
     const qObj = {
-      client_id: '83ab5b077c1041ed2fed',
+      client_id: '',
       redirect_url: 'http://localhost:3000/oauthcallback',
       scope: 'user',
     }
@@ -21,8 +21,8 @@ const oAuthController = {
     const code = req.query.code;
 
     const qObj = {
-      client_id:  '83ab5b077c1041ed2fed',
-      client_secret: '2384b41a2404b26375d05f995dc19f4c406890b5',
+      client_id:  '',
+      client_secret: '',
       code: code,
     }
     const tokenQuery = qs.stringify(qObj);
