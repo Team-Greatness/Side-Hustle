@@ -7,6 +7,7 @@ import { IndexRoute } from 'react-router';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import $ from 'jquery';
 import mapController from './../controller/mapController'
+import Header from './Header.js'
 
 class App extends Component {
     constructor(props) {
@@ -35,11 +36,7 @@ class App extends Component {
        const rootStruct = (props) => {
             return (
               <div>
-                <ul>
-                  <Link to="/PostJob"><button>PostJob</button></Link>
-                  <Link to="/ViewJob"><button>ViewJob</button></Link>
-                  {/*<button onClick={this.retrieveDataFromServer}></button>*/}
-                </ul>
+                <Header />
               </div>
             );
         }

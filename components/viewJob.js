@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 import Job from './Job.js'
 import mapController from '../controller/mapController.js';
 import $ from 'jquery';
+import Header from './Header.js'
 
 var INITIAL_LOCATION = {
   address: 'London, United Kingdom',
@@ -60,34 +61,29 @@ class ViewJob extends React.Component {
     }
 
     setLocation() {
-        // const promise = mapController.setLocation();
-        // promise.then((data) => {
-        //    mapController.pos = data; 
-        //    mapController.map.setCenter(mapController.pos);
-        //    this.parseDataFromServer();
-        // });  
+        const promise = mapController.setLocation();
+        promise.then((data) => {
+           mapController.pos = data; 
+           mapController.map.setCenter(mapController.pos);
+           //data object needs to contain list not location
+           this.parseDataFromServer();
+        });  
     }
 
     getLocation() {
-
-      // let promise = mapController.getLocation();
-      // promise.then((data) => { 
-      //   mapController.pos = data; 
-      //   mapController.map.setCenter(mapController.pos);
-      //   this.parseDataFromServer();
-      // });
+      let promise = mapController.getLocation();
+      promise.then((data) => { 
+         //data object needs to contain list not location
+         this.parseDataFromServer();
+      });
     }
 
     parseDataFromServer(data) {
-      console.log('data', data);
+      if (!data) data = this.state.jobs;
       let validLocations = mapController.getDistance(data);
       validLocations.then(jobdata => {
         mapController.filteredData = jobdata;
-        
-        //////////////////
         mapController.placeMarkers(jobdata);
-        //////////////////
-
         this.setState({'jobs': jobdata})
       });
     }
@@ -144,6 +140,7 @@ class ViewJob extends React.Component {
         <div>
           <div style = {styles.map} className="map" ref={this.setMapElementReference}></div>
           <div style = {styles.right}>
+            <Header />
             <div id='location'>
             <h4 id="setLocation">Set Location</h4>
               <input id="locationInput" type="text"/>
