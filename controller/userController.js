@@ -10,33 +10,22 @@ const userController = {
         // res.redirect('/signin');
         next();
       } else {
+
         if (user){
           res.status(200);
           //res.params(user);
           res.redirect('/app');
+        } else {
+          next();
         }
       }
-      next();
-    });
-  },
-
-
-  addUser (req, res, next) {
-    //takes in git username and git email
-    User.create({username: req.body}, (err, user) => {
-      if (err) {
-        res.status(404);
-        res.end();
-      } else {
-        res.locals.ssid = user._id;
-      }
+      //next();
     });
   },
 
   startUser (req, res, next) {
     // check userDB, return userID if found, create a user if not.
-
-    User.findOne({username: res.locals.username, email: res.locals.email}, (err, user) => {
+    User.findOne({username: res.body.username, email: res.body.email}, (err, user) => {
       if (err) {
         console.log(err);
         next(err);
@@ -46,9 +35,7 @@ const userController = {
         next();
         return;
       }
-      console.log('user ', user);
-      console.log('locals', res.locals);
-      User.create({'username': res.locals.username, 'email': res.locals.email}, (err, user) => {
+      User.create({'username': res.body.username, 'email': res.body.email}, (err, user) => {
         if (err) {
           console.log(err);
           next(err);

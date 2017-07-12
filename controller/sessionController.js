@@ -22,18 +22,35 @@ const sessionController = {
 
   startSession (req, res, next) {
     // takes SSID and sticks it in DB.
-    Session.create({ 'ssid': res.locals }, (err, session) => {
+
+    Session.findOneAndRemove({'ssid': res.locals }, (err, session) => {
+      // remove existing session cookie if it exists, and create a new one. 
       if (err) {
-        // res.status(404);
-        // res.end();
         console.log('err');
         next(err);
       } else {
-        //set session cookie.
-        res.cookie('ssid', res.locals, { httpOnly:true, maxAge: 3600000 });
-        next();
+        Session.create({ 'ssid': res.locals }, (err, session) => {
+          if (err) {
+            console.log('err');
+            next(err);
+          } else {
+            //set session cookie.
+            res.cookie('ssid', res.locals, { httpOnly:true, maxAge: 3600000 });
+            next();
+          }
+        });
       }
     });
+
+  },
+
+  handleSession (req, res, next) {
+    if (req.cookies.ssid) {
+      next();
+    } else {
+      res.status(401);
+      res.end();
+    }
   }
 
 }

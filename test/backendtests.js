@@ -14,6 +14,7 @@ before(function(){
   server.mongoose.connection.once('open', () => {
       server.mongoose.connection.db.dropCollection('forms', (err, result) => {
         if (err) console.log(err);
+            //test uid 59669064445780750cdd4a3a
       });
   });
 });
@@ -27,7 +28,7 @@ before(function(){
 
 
 describe('Route functionality', () => {
-  //fix me to skip over oAuth.
+
   describe('routes to static files', () => {
     describe(' GET / - initial route', () => {
       it('responds with 200 status and text/html content type', done => {
@@ -35,8 +36,6 @@ describe('Route functionality', () => {
           .get('/')
           .expect('Content-Type', /text\/html/)
           .expect(200, done);
-
-          //need to add CSS and JS for this route.
       });
     });
 
@@ -82,6 +81,29 @@ describe('Route functionality', () => {
   });
 });
 
+describe('Authentication', () => {
+  describe('sign in control', () => {
+    it('should prevent a user from accessing /app without ssid and return a 200 status code', done => {
+      request(HOST)
+        .get('/api')
+        .expect(200, done);
+    });
+    describe('cookie based access', () => {
+      it('should allow a user to access /app with ssid and return status 200', done => {
+        request(HOST)
+          .get('/api')
+          .set('Cookie', ['ssid=9669064445780750cdd4a3a'])
+          .expect(200, done)
+      });
+    });
+
+  });
+
+
+
+
+});
+
 describe('Database calls', ()=> {
   describe('GET', ()=> {
     it('should respond with status code 200 and an empty JSON array', done => {
@@ -113,7 +135,7 @@ describe('Database calls', ()=> {
         request(HOST)
           .post('/post')
           .set('Content-Type', 'application/json')
-          .set('Cookie', ['ssid=testIDabcdefg'])
+          .set('Cookie', ['ssid=59669064445780750cdd4a3a'])
           .send({
             title: 'supertest',
             description: 'a test job',
@@ -151,7 +173,7 @@ describe('Database calls', ()=> {
         request(HOST)
         .put('/updatejob')
         .set('Content-Type', 'application/json')
-        .set('Cookie', ['ssid=testIDabcdefg'])
+        .set('Cookie', ['ssid=59669064445780750cdd4a3a'])
         .send({
           title: 'supertest',
           description: 'an updated test job',
@@ -173,7 +195,7 @@ describe('Database calls', ()=> {
         request(HOST)
         .put('/updatejob')
         .set('Content-Type', 'application/json')
-        .set('Cookie', ['ssid=testIDabcdefg'])
+        .set('Cookie', ['ssid=59669064445780750cdd4a3a'])
         .send({
           title: 'supertest',
           description: 'an updated test job',
@@ -196,7 +218,7 @@ describe('Database calls', ()=> {
         request(HOST)
         .put('/updatejob')
         .set('Content-Type', 'application/json')
-        .set('Cookie', ['ssid=testIDabcdefg'])
+        .set('Cookie', ['ssid=59669064445780750cdd4a3a'])
         .send({
           title: 'supertest',
           userID: 'testIDabcdefg',
@@ -220,7 +242,7 @@ describe('Database calls', ()=> {
         request(HOST)
         .del('/deletejob')
         .set('Content-Type', 'application/json')
-        .set('Cookie', ['ssid=testIDabcdefg'])
+        .set('Cookie', ['ssid=59669064445780750cdd4a3a'])
         .send({
           title: 'supertest',
           description: 'a test job',
@@ -228,24 +250,6 @@ describe('Database calls', ()=> {
           pay: 17200
         })
         .expect(200)
-        .expect((res) => {
-          expect(res.body).to.be.an('object')
-          expect(res.body.title).to.equal('supertest')
-          expect(Object.keys(res.body).length).to.equal(5)
-        }).end(done);
-      });
-
-      xit('should return a status 418 and the job in question if the delete throws an error', done => {
-        request(HOST)
-        .del('/deletejob')
-        .set('Content-Type', 'application/json')
-        .set('Cookie', ['ssid=testIDabcdefg'])
-        .send({
-          title: 'supertest',
-          description: 'a test job',
-          pay: '17200'
-        })
-        .expect(418)
         .expect((res) => {
           expect(res.body).to.be.an('object')
           expect(res.body.title).to.equal('supertest')
