@@ -1,58 +1,17 @@
-// Start with a webdriver instance: 
-var sw = require('selenium-webdriver');
-const By = sw.By;
-const until = sw.until;
-var browser = sw.Capabilities.phantomjs();
-var driver = new sw.Builder()
-  .withCapabilities(browser)
-  .build();
-
-// // And then... 
-var chai = require('chai');
-// var chaiWebdriver = require('chai-webdriver');
-// 
-
-//optional timeout in ms to use with eventually (defaults to 1000)
-  var timeout = 15000;
-//optional interval in ms to use when polling (defaults to 200)
-  var interval = 100;
-
-// // And then...
-  var chaiWebdriver = require('chai-webdriver-promised');
-  chai.use(chaiWebdriver(driver, timeout, interval));
-
-// chai.use(chaiWebdriver(driver));
-
-const assert = chai.assert;
+const chai = require('chai');
 const expect = chai.expect;
-chai.should();
-
-
-// driver.findElement(By.name('q')).sendKeys('webdriver');
-// driver.findElement(By.name('btnG')).click();
-// driver.wait(until.titleIs('webdriver - Google Search'), 1000);
-// driver.quit();
-
-
-// Start with a webdriver instance:
-// var driver = new sw.Builder()
-//    .withCapabilities(sw.Capabilities.chrome())
-//    .build()
-
+const assert = chai.assert;
+const webdriverio = require('webdriverio');
+var options = { desiredCapabilities: { browserName: 'phantomjs' } };
+const client = webdriverio.remote(options);
  
 describe('ViewJob Feature Test', () => {
   before((done) => {
-    driver.get('http://localhost:3000').then(() => {
-      driver.findElement(sw.By.id('viewJob')).click().then(() => {
-        done();
-      })
-    });
-      // driver.wait(until.titleIs('webdriver - Google Search'), 1000);
+    client.init().url('http://localhost:3000/ViewJob').then(() => done());
   });
 
-  after(function(done){
-    // End of test use this.
-    driver.quit().then(() => done());
+  after(function(){
+    client.end();
   });
 
   // Describe Google Maps it's on page 
@@ -113,7 +72,7 @@ describe('ViewJob Feature Test', () => {
 
         });
 
-        it('On click, it should display PostJob page', async (done) => {
+        xit('On click, it should display PostJob page', async (done) => {
           // driver.findElement(By.css('#postJob')).click().then( async () => {
           //     const el = await driver.findElement(By.css('.inputText'))
           //     console.log(el);
