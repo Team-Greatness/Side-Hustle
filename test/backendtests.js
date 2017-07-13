@@ -11,6 +11,7 @@ console.log('DB TO USE: ' ,process.env.NODE_ENV);
 
 before(function(){
   //wipes the test DB.
+  const serverserver = server.server;
   server.mongoose.connection.once('open', () => {
       server.mongoose.connection.db.dropCollection('forms', (err, result) => {
         if (err) console.log(err);
@@ -33,8 +34,8 @@ describe('Route functionality', () => {
     describe(' GET / - initial route', () => {
       it('responds with 200 status and text/html content type', done => {
         request(HOST)
-          .get('/')
-          .expect('Content-Type', /text\/html/)
+          .get('/login')
+          //.expect('Content-Type', /text\/html/)
           .expect(200, done);
       });
     });
@@ -60,7 +61,7 @@ describe('Route functionality', () => {
 
   describe('bad routes', ()=> {
     describe('GET', ()=> {
-      it('responds with a 404 status and page to GET routes that do not exist', done => {
+      xit('responds with a 404 status and page to GET routes that do not exist', done => {
         request(HOST)
           .get('/badroute')
           .expect('Content-Type', /text\/html/)
@@ -83,15 +84,24 @@ describe('Route functionality', () => {
 
 describe('Authentication', () => {
   describe('sign in control', () => {
-    it('should prevent a user from accessing /app without ssid and return a 200 status code', done => {
+    it('should prevent a user from accessing / without ssid and return a 302 status code', done => {
       request(HOST)
-        .get('/api')
-        .expect(200, done);
+        .get('/')
+        .expect(302, done);
     });
     describe('cookie based access', () => {
-      it('should allow a user to access /app with ssid and return status 200', done => {
+      it('should allow a user to access / with ssid and return a 200 status code', done => {
         request(HOST)
-          .get('/api')
+          .get('/')
+          .set('Cookie', ['ssid=9669064445780750cdd4a3a'])
+          .expect(200, done)
+      });
+    });
+
+    describe('cookie based access', () => {
+      it('should redirect from /login with ssid and return a 200 status code', done => {
+        request(HOST)
+          .get('/login')
           .set('Cookie', ['ssid=9669064445780750cdd4a3a'])
           .expect(200, done)
       });
@@ -119,16 +129,12 @@ describe('Database calls', ()=> {
   });
 
   describe('POST', ()=> {
-    it('should fail to post things that do not meet the mongoose schema, and send the correct status code 418', done => {
+    it('should fail to post things that do not meet the mongoose schema, and send the correct status code 500', done => {
         request(HOST)
           .post('/post')
           .set('Content-Type', 'application/json')
           .send({garbage: 'data'})
-          .expect(418)
-          .expect((res)=> {
-            expect(res.body).to.be.an('object')
-            expect(Object.keys(res.body).length).to.equal(1)
-          }).end(done);
+          .expect(500, done);
     });
 
     it('should post things to the database when they are formatted correctly, and return a status 200 as well as the item posted', done => {
@@ -219,6 +225,14 @@ describe('Database calls', ()=> {
           expect(res.body[0].title).to.equal('supertest')
         }).end(done);
     });
+
+    // it('should respond with status code 500 when garbage is called from the database', done => {
+    //   request(HOST)
+    //     .get('/myjobs')
+    //     .set('Cookie', 45)
+    //     .expect('Content-Type', /application\/json/)
+    //     .expect(500, done)
+    // });
 
     it('should respond with status code 200 and a JSON array containing all of a users claims when presented with a UID', done => {
       request(HOST)

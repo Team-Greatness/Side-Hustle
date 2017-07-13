@@ -26,12 +26,10 @@ const sessionController = {
     Session.findOneAndRemove({'ssid': res.locals }, (err, session) => {
       // remove existing session cookie if it exists, and create a new one.
       if (err) {
-        console.log('err');
         next(err);
       } else {
         Session.create({ 'ssid': res.locals }, (err, session) => {
           if (err) {
-            console.log('err');
             next(err);
           } else {
             //set session cookie.
@@ -48,8 +46,7 @@ const sessionController = {
     if (req.cookies.ssid) {
       next();
     } else {
-      res.status(401);
-      res.end();
+      res.redirect('/login');
     }
   }
 

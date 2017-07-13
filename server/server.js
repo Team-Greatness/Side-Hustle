@@ -19,14 +19,16 @@ mongoose.connection.once('open', () => {
   console.log('Connected to Database ', process.env.NODE_ENV);
 });
 
-app.use('/build', express.static(__dirname +'./../build'));
+//app.use('/build', express.static(__dirname +'./../build'));
 app.use('/static', express.static(__dirname +'./../static'));
-
+app.get('/build/bundle.js', (req, res, next) => {
+  res.sendFile(path.join(__dirname + './../build/bundle.js'));
+});
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/', sessionController.isLoggedIn, userController.findUser, (req, res) => {
+app.get('/login', sessionController.isLoggedIn, userController.findUser, (req, res) => {
   res.sendFile(path.join(__dirname + './../static/signin.html'));
 });
 
@@ -37,7 +39,7 @@ app.get('/oauthcallback', oAuth.getToken, oAuth.apiRedirect, userController.star
 });
 
 //route to main page.
-app.get('/app', sessionController.isLoggedIn, sessionController.handleSession, (req, res) => {
+app.get('/', sessionController.isLoggedIn, sessionController.handleSession, (req, res) => {
   res.sendFile(path.join(__dirname + './../static/post.html'));
 });
  //crud routes
@@ -52,7 +54,7 @@ app.delete('/deletejob', formController.deleteJob);
 
 app.put('/updatejob', formController.updateJob);
 
-app.get(/app.*/, (req, res) => {
+app.get(/.*/, (req, res) => {
   const domain = req.get('host').replace(/\:.*/, '');
   // res.end(renderFullPage('', port, domain));
   res.sendFile(path.join(__dirname + './../static/post.html'));

@@ -7,19 +7,15 @@ const userController = {
   findUser (req, res, next) {
     User.findOne({_id: req.cookies.ssid}, (err, user) => {
       if (err) {
-        // res.redirect('/signin');
         next();
       } else {
-
         if (user){
           res.status(200);
-          //res.params(user);
-          res.redirect('/app');
+          res.redirect('/');
         } else {
           next();
         }
       }
-      //next();
     });
   },
 
@@ -27,7 +23,6 @@ const userController = {
     // check userDB, return userID if found, create a user if not.
     User.findOne({username: res.body.username, email: res.body.email}, (err, user) => {
       if (err) {
-        console.log(err);
         next(err);
       }
       if (user) {
@@ -37,7 +32,6 @@ const userController = {
       }
       User.create({'username': res.body.username, 'email': res.body.email}, (err, user) => {
         if (err) {
-          console.log(err);
           next(err);
         }
           res.locals = user._id;

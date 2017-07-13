@@ -8,13 +8,12 @@ const formController = {
     const job = req.body;
     job.userID = req.cookies.ssid;
     Form.create(job, (err, aJob)=>{
-      if (err){
-        res.status(418);
-        res.json(job);
-        return;
-      }
+      if (!err){
         res.status(200);
         res.json(aJob);
+      } else {
+        next(err);
+      }
     });
   },
 
@@ -29,7 +28,6 @@ const formController = {
     const uid = req.cookies.ssid;
     Form.find({'userID': uid}, (err, jobs) => {
       if (err){
-        console.log(err);
         next(err);
       }
       res.json(jobs);
@@ -49,13 +47,12 @@ const formController = {
     const job = req.body;
     job.userID = req.cookies.ssid;
     Form.deleteOne(job, (err, aJob)=>{
-      if (err) {
-        res.status(418);
-        res.json(job);
-        return;
-      }
+      if (!err) {
         res.status(200);
         res.json(job);
+      } else {
+        next(err);
+      }
     });
   },
 
@@ -63,14 +60,13 @@ const formController = {
     const job = req.body;
     job.userID = req.cookies.ssid;
     Form.where({title: job.title}).updateOne(job, (err, result) => {
-      if (err) {
-        res.status(418);
-        res.json(job);
-        return;
-      }
+      if (!err) {
         res.status(200);
         res.json(job);
         return;
+      } else {
+        next(err);
+      }
     });
   }
 }
